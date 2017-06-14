@@ -11,4 +11,8 @@ registerServiceWorker()
 ReactDOM.render(
   <App />,
   document.getElementById('root'),
+  () => {
+
+    document.addEventListener('touchmove', (e) => e.preventDefault())
+  }
 )

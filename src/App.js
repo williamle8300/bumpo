@@ -45,7 +45,7 @@ class App extends Component {
             localStorage.removeItem('todos')
             window.location = '/'
           }}
-          style={{position: 'fixed', bottom: '1rem', left: '1rem',}}>
+          style={{zIndex: 1, position: 'fixed', bottom: '1rem', left: '1rem',}}>
           delete localstorage
         </button>
       </div>
