@@ -1,3 +1,11 @@
+scrolling strategy
+1. disable touch events on document.body
+2. html, body, #root are position: fixed
+3. use react-swipeable to re-create scrolling
+
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>

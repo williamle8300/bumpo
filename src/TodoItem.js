@@ -8,23 +8,20 @@ class TodoItem extends Component {
 
     super(props)
     this.state = {
-      deltaX: 0
+      x: 0
     }
-    this.handleSwipeRight = this.handleSwipeRight.bind(this)
-    this.handleSwipeLeft = this.handleSwipeLeft.bind(this)
-    this.handleSwipeEnd = this.handleSwipeEnd.bind(this)
   }
 
   render() {
     return (
       <li style={this.styleA(this.props, this.state)}>
         <Swipeable
-          onSwipingRight={this.handleSwipeRight}
-          onSwipingLeft={this.handleSwipeLeft}
-          onSwiped={this.handleSwipeEnd}
+          onSwipingRight={(e, deltaX) => this.setState({x: deltaX > 100 ? 100 : deltaX})}
+          onSwipingLeft={(e, deltaX) => this.setState({x: -deltaX < -100 ? -100 : -deltaX})}
+          onSwiped={() => this.setState({x: 0})}
           onTouchTap={this.props.handleBump}
           trackMouse={true}
-          style={this.styleC()}
+          style={this.styleC(this.props, this.state)}
         >
           {this.props.todo.text}
           <div style={this.styleB()}>
@@ -39,27 +36,12 @@ class TodoItem extends Component {
     console.log(1, a, b)
   }
 
-  handleSwipeRight(e, deltaX) {
-
-    this.setState({deltaX: deltaX > 100 ? 100 : deltaX})
-  }
-
-  handleSwipeLeft(e, deltaX) {
-
-    this.setState({deltaX: -deltaX < -100 ? -100 : -deltaX})
-  }
-
-  handleSwipeEnd(e, data) {
-
-    this.setState({deltaX: 0})
-  }
-
   styleA(props, state) {
     return {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',           //-100 <--> 100
-      backgroundColor: `rgba(0, 0, 255, ${Math.abs(state.deltaX) / 100})`,
+      backgroundColor: `rgba(0, 0, 255, ${Math.abs(state.x) / 100})`,
       fontFamily: 'helvetica',
       fontSize: '1.25rem',
       color: '#ffffff',
@@ -85,7 +67,7 @@ class TodoItem extends Component {
      }
   }
 
-  styleC() {
+  styleC(props, state) {
     return {
       display: 'flex',
       alignItems: 'center',
@@ -96,11 +78,7 @@ class TodoItem extends Component {
       paddingLeft: '1rem',
       width: '100%',
       backgroundColor: '#ccc',
-      transform: `translateX(${this.state.deltaX}px)`,
-      //
-      // // TODO: this hack lets the Browser tap emulator work
-      // //       overwrites react-draggable
-      // touchAction: 'inherit',
+      transform: `translateX(${state.x}px)`,
     }
   }
 }

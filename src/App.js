@@ -3,7 +3,7 @@ import TodoItem from './TodoItem'
 
 
 import React, {Component} from 'react'
-// import Axios from 'axios'
+import Swipeable from 'react-swipeable'
 
 
 class App extends Component {
@@ -12,8 +12,12 @@ class App extends Component {
 
     super(props)
     this.state = {
-      todos: []
+      todos: [],
+      lastY: 0,
+      y: 0,
     }
+    this.onSwiping = this.onSwiping.bind(this)
+    this.onSwiped = this.onSwiped.bind(this)
     this.handleBump = this.handleBump.bind(this)
   }
 
@@ -25,23 +29,30 @@ class App extends Component {
     return (
       <div style={{padding: '1rem', height: '100%'}}>
         <div style={this.styleA()}>{totalScore}</div>
-        <ul style={this.styleB()}>
-          {
-            this.state.todos
-            .sort((a, b) => b.score - a.score)
-            .map((todo, index) => {
-              return (
-                <TodoItem
-                  key={todo.id}
-                  handleBump={this.handleBump.bind(null, todo.id)}
-                  todo={todo}
-                />
-              )
-            })
-          }
-        </ul>
+        <Swipeable
+          onSwiping={this.onSwiping}
+          onSwiped={this.onSwiped}
+          trackMouse={true}
+          style={this.styleD(this.props, this.state)}
+        >
+          <ul style={this.styleB()}>
+            {
+              this.state.todos
+              .sort((a, b) => b.score - a.score)
+              .map((todo, index) => {
+                return (
+                  <TodoItem
+                    key={todo.id}
+                    handleBump={this.handleBump.bind(null, todo.id)}
+                    todo={todo}
+                  />
+                )
+              })
+            }
+          </ul>
+        </Swipeable>
         <button
-          onClick={() => {
+          onTouchTap={() => {
             localStorage.removeItem('todos')
             window.location = '/'
           }}
@@ -59,6 +70,18 @@ class App extends Component {
     localStorage.setItem('todos', JSON.stringify(sampleData))
 
     this.setState({todos: sampleData})
+  }
+
+  onSwiping (e, deltaX, deltaY) {
+
+
+    this.setState({y: this.state.lastY - deltaY})
+  }
+
+  onSwiped (e, deltaX, deltaY) {
+
+    console.log(this.state.lastY)
+    this.setState({lastY: this.state.lastY - deltaY})
   }
 
   handleBump (id) {
@@ -114,6 +137,12 @@ class App extends Component {
       borderBottomColor: '#ffffff',
       borderBottomStyle: 'solid',
       cursor: 'pointer',
+    }
+  }
+
+  styleD(props, state) {
+    return {
+      transform: `translateY(${state.y}px)`
     }
   }
 }

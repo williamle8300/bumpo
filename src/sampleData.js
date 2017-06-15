@@ -49,6 +49,11 @@ const sampleData = [
     text: 'pay toll fee',
     score: 0,
   },
+  {
+    id: 'k',
+    text: 'fillout OKCupid profile',
+    score: 0,
+  }
 ]
 
 export default sampleData
