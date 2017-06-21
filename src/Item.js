@@ -23,9 +23,9 @@ class TodoItem extends Component {
           trackMouse={true}
           style={this.styleC(this.props, this.state)}
         >
-          {this.props.todo.text}
+          {this.props.item.text}
           <div style={this.styleB()}>
-            {this.props.todo.score}
+            {this.props.item.score}
           </div>
         </Swipeable>
       </li>

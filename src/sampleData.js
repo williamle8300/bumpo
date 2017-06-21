@@ -53,7 +53,12 @@ const sampleData = [
     id: 'k',
     text: 'fillout OKCupid profile',
     score: 0,
-  }
+  },
+  {
+    id: 'l',
+    text: 'pay tmobile bill',
+    score: 0
+  },
 ]
 
 export default sampleData

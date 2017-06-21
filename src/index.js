@@ -14,7 +14,8 @@ ReactDOM.render(
   () => {
 
     // Lock screen. All touch events & scrolling is re-created
-    document.body.ontouchstart = (e) => e.preventDefault()
+    // document.ontouchstart = (e) => e.preventDefault()
+    // document.getElementsByTagName('ul')[0].ontouchstart = (e) => e.stopPropagation()
     document.documentElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%;')
     document.body.setAttribute('style', 'position: fixed; width: 100%; height: 100%;')
     document.getElementById('root').setAttribute('style', 'position: fixed; width: 100%; height: 100%;')

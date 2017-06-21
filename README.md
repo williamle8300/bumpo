@@ -1,7 +1,26 @@
-scrolling strategy
-1. disable touch events on document.body
-2. html, body, #root are position: fixed
-3. use react-swipeable to re-create scrolling
+
+the
+fiiiiiiiiinest
+darkest
+silkiest
+CREMA-LADEN
+coffee
+YOU WILL EVER HAVE
+
+sell that coffee
+
+THE TODO LIST THAT GETS THINGS DONE
+gamification + psycho-engineering
+
+sell that
+
+soundz
+1. https://www.zapsplat.com/music/user-interface-tone-point-awarded-or-item-collected/
+2. https://www.zapsplat.com/music/button-tick/
+3. https://www.zapsplat.com/music/user-interface-tone-positive-correct-or-completed/
+4. https://www.zapsplat.com/music/user-interface-tone-select-marimba/
+complete a few errands for insight
+
 
 
 ---
