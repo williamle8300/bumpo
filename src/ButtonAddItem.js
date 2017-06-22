@@ -63,6 +63,7 @@ class ButtonAddItem extends Component {
     Firebase.database().ref('user_items/' +Firebase.auth().currentUser.uid+ '/items/' +id)
     .set({
       id: id,
+      timestamp: Firebase.database.ServerValue.TIMESTAMP,
       lastUpdated: Firebase.database.ServerValue.TIMESTAMP,
       text: this.state.text,
       _list_: 'LIST_A',

@@ -24,7 +24,7 @@ class List extends Component {
 
 
     return (
-      <div>
+      <div style={{height: '100%'}}>
         <div style={this.styleA()}>{totalScore}</div>
         <ul style={this.styleB()}>
           {
@@ -67,7 +67,8 @@ class List extends Component {
   handleBump (id) {
 
     const oldItem = this.state.items.filter((item) => item.id === id)[0]
-    const newItem = Object.assign({}, oldItem, {score: oldItem.score + 1})
+    const newItem = Object.assign({}, oldItem, {score: oldItem.score + 1, lastUpdated: Firebase.database.ServerValue.TIMESTAMP})
+
 
     Firebase.database()
     .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items/' +id)

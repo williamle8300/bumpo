@@ -66,7 +66,7 @@ class TodoItem extends Component {
     this.setState({loading: true}, () => {
 
       Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items/' +this.props.item.id)
-      .set(Object.assign({}, this.props.item, {isCompleted: !this.props.item.isCompleted}))
+      .set(Object.assign({}, this.props.item, {isCompleted: !this.props.item.isCompleted, lastUpdated: Firebase.database.ServerValue.TIMESTAMP}))
       .then((error) => {
 
         this.setState({loading: false}, () => error ? alert(error) : null)
