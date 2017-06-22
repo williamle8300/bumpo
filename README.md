@@ -9,8 +9,8 @@ YOU WILL EVER HAVE
 
 sell that coffee
 
-THE TODO LIST THAT GETS THINGS DONE
-gamification + psycho-engineering
+THE TODO LIST THAT HELPS YOU GET THINGS DONE
+gamification
 
 sell that
 

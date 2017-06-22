@@ -4,8 +4,6 @@ import ButtonAddItem from './ButtonAddItem'
 
 import React, {Component} from 'react'
 import Firebase from './Firebase'
-import FirebaseUI from 'firebaseui'
-import 'firebaseui/dist/firebaseui.css'
 
 
 class List extends Component {
@@ -33,13 +31,7 @@ class List extends Component {
             this.state.items
             .sort((a, b) => b.score - a.score)
             .map((item, index) => {
-              return (
-                <Item
-                  key={item.timestamp}
-                  handleBump={this.handleBump.bind(null, item.id)}
-                  item={item}
-                />
-              )
+              return <Item key={item.id} handleBump={this.handleBump.bind(null, item.id)} item={item}/>
             })
           }
         </ul>
@@ -60,14 +52,17 @@ class List extends Component {
 
   handleBump (id) {
 
-    const currentTodos = JSON.parse(localStorage.getItem('items'))
-    const stagedTodo = currentTodos.filter((item) => item.id === id ? item : false)[0]
-    const unstagedTodos = currentTodos.filter((item) => item.id !== id ? item : false)
-    const updatedTodos = unstagedTodos.concat(Object.assign({}, stagedTodo, {score: stagedTodo.score + 1}))
+    const oldItem = this.state.items.filter((item) => item.id === id)[0]
+    const newItem = Object.assign({}, oldItem, {score: oldItem.score + 1})
 
-    localStorage.setItem('items', JSON.stringify(updatedTodos))
+    console.log(1, id)
+    Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items/' +id).set(newItem)
+    .then((error) => {
 
-    this.setState({items: updatedTodos})
+      if (error) return alert(error)
+
+      this.setState({items: this.state.items.filter((item) => item.id !== id).concat(newItem)})
+    })
   }
 
   styleA() {

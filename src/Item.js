@@ -10,15 +10,18 @@ class TodoItem extends Component {
     this.state = {
       x: 0
     }
+    this.handleSwipeRight = this.handleSwipeRight.bind(this)
+    this.handleSwipeLeft = this.handleSwipeLeft.bind(this)
+    this.handleSwipeComplete = this.handleSwipeComplete.bind(this)
   }
 
   render() {
     return (
       <li style={this.styleA(this.props, this.state)}>
         <Swipeable
-          onSwipingRight={(e, deltaX) => this.setState({x: deltaX > 100 ? 100 : deltaX})}
-          onSwipingLeft={(e, deltaX) => this.setState({x: -deltaX < -100 ? -100 : -deltaX})}
-          onSwiped={() => this.setState({x: 0})}
+          onSwipingRight={this.handleSwipeRight}
+          onSwipingLeft={this.handleSwipeLeft}
+          onSwiped={this.handleSwipeComplete}
           onTouchTap={this.props.handleBump}
           trackMouse={true}
           style={this.styleC(this.props, this.state)}
@@ -32,8 +35,19 @@ class TodoItem extends Component {
     )
   }
 
-  x(a, b) {
-    console.log(1, a, b)
+  handleSwipeRight(e, deltaX) {
+
+     this.setState({x: deltaX > 100 ? 100 : deltaX})
+  }
+
+  handleSwipeLeft(e, deltaX) {
+
+    this.setState({x: -deltaX < -100 ? -100 : -deltaX})
+  }
+
+  handleSwipeComplete() {
+
+    this.setState({x: 0})
   }
 
   styleA(props, state) {

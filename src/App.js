@@ -19,7 +19,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(Firebase.auth().currentUser)
     return (
       <div style={{display: 'flex', flexFlow: 'column', height: '100%'}}>
         {this.state.isLoggedIn ? <List/> : <div id="yo"/>}

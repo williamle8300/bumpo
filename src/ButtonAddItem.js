@@ -57,20 +57,20 @@ class ButtonAddItem extends Component {
 
     e.preventDefault()
 
-    console.log('submit')
+    const id = Firebase.database().ref('user_items/' +Firebase.auth().currentUser.uid+ '/items').push().key
 
-    Firebase.database().ref('user_items/' +Firebase.auth().currentUser.uid+ '/items')
-    .push()
+
+    Firebase.database().ref('user_items/' +Firebase.auth().currentUser.uid+ '/items/' +id)
     .set({
-      timestamp: Firebase.database.ServerValue.TIMESTAMP,
+      id: id,
+      lastUpdated: Firebase.database.ServerValue.TIMESTAMP,
       text: this.state.text,
       _list_: 'LIST_A',
       isCompleted: false,
       score: 0,
-    })
-    .then((error) => {
+    }, (error) => {
 
-      if (error) return alert(error)
+      if (error) alert(error)
 
       this.setState({
         isInputVisible: false,
