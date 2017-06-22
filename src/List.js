@@ -48,6 +48,15 @@ class List extends Component {
       this.setState({items: this.state.items.concat(snapshot.val())})
       console.log(snapshot.val())
     })
+
+    Firebase.database()
+    .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items')
+    .on('child_changed', (snapshot) => {
+
+      const updatedItem = snapshot.val()
+
+      this.setState({items: this.state.items.filter((item) => item.id !== updatedItem.id).concat(updatedItem)})
+    })
   }
 
   handleBump (id) {
