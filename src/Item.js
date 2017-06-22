@@ -1,3 +1,4 @@
+import Firebase from 'firebase'
 import React, {Component} from 'react'
 import Swipeable from 'react-swipeable'
 
@@ -8,11 +9,14 @@ class TodoItem extends Component {
 
     super(props)
     this.state = {
-      x: 0
+      loading: false,
+      x: 0,
     }
     this.handleSwipeRight = this.handleSwipeRight.bind(this)
     this.handleSwipeLeft = this.handleSwipeLeft.bind(this)
     this.handleSwipeComplete = this.handleSwipeComplete.bind(this)
+    this.toggleComplete = this.toggleComplete.bind(this)
+    this.delete = this.delete.bind(this)
   }
 
   render() {
@@ -37,7 +41,9 @@ class TodoItem extends Component {
 
   handleSwipeRight(e, deltaX) {
 
-     this.setState({x: deltaX > 100 ? 100 : deltaX})
+    if (deltaX > 100) return
+
+    this.setState({x: deltaX})
   }
 
   handleSwipeLeft(e, deltaX) {
@@ -45,9 +51,37 @@ class TodoItem extends Component {
     this.setState({x: -deltaX < -100 ? -100 : -deltaX})
   }
 
-  handleSwipeComplete() {
+  handleSwipeComplete(e, x, y) {
 
-    this.setState({x: 0})
+    this.setState({x: 0}, () => {
+
+      if (x < -100) this.toggleComplete()
+      if (x > 100) this.delete()
+    })
+
+  }
+
+  toggleComplete() {
+
+    this.setState({loading: true}, () => {
+
+      Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items/' +this.props.item.id)
+      .set(Object.assign({}, this.props.item, {isCompleted: !this.props.item.isCompleted}))
+      .then((error) => {
+
+        this.setState({loading: false}, () => error ? alert(error) : null)
+      })
+    })
+  }
+
+  delete() {
+
+    this.setState({loading: true}, () => {
+
+      Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items/' +this.props.item.id)
+      .remove()
+      .then((error) => error ? alert(error) : null)
+    })
   }
 
   styleA(props, state) {
@@ -91,7 +125,7 @@ class TodoItem extends Component {
       paddingBottom: '1rem',
       paddingLeft: '1rem',
       width: '100%',
-      backgroundColor: '#ccc',
+      backgroundColor: this.props.item.isCompleted ? 'blue' : '#ccc',
       transform: `translateX(${state.x}px)`,
     }
   }

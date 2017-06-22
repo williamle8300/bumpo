@@ -45,17 +45,22 @@ class List extends Component {
     Firebase.database()
     .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items')
     .on('child_added', (snapshot) => {
+
       this.setState({items: this.state.items.concat(snapshot.val())})
-      console.log(snapshot.val())
     })
 
     Firebase.database()
     .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items')
     .on('child_changed', (snapshot) => {
 
-      const updatedItem = snapshot.val()
+      this.setState({items: this.state.items.filter((item) => item.id !== snapshot.val().id).concat(snapshot.val())})
+    })
 
-      this.setState({items: this.state.items.filter((item) => item.id !== updatedItem.id).concat(updatedItem)})
+    Firebase.database()
+    .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items')
+    .on('child_removed', (snapshot) => {
+
+      this.setState({items: this.state.items.filter((item) => item.id !== snapshot.val().id)})
     })
   }
 
@@ -64,14 +69,10 @@ class List extends Component {
     const oldItem = this.state.items.filter((item) => item.id === id)[0]
     const newItem = Object.assign({}, oldItem, {score: oldItem.score + 1})
 
-    console.log(1, id)
-    Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items/' +id).set(newItem)
-    .then((error) => {
-
-      if (error) return alert(error)
-
-      this.setState({items: this.state.items.filter((item) => item.id !== id).concat(newItem)})
-    })
+    Firebase.database()
+    .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items/' +id)
+    .set(newItem)
+    .then((error) => error ? alert(error) : null)
   }
 
   styleA() {
