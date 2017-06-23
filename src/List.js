@@ -24,17 +24,18 @@ class List extends Component {
 
     return (
       <div style={{zIndex: 1, position: 'fixed', top: 0, width: '100%', height: '100%'}}>
-        <div style={this.styleA()}>{totalScore}</div>
+        <div onTouchTap={this.props.handleCloseList} style={this.styleA()}>{this.props.list.name} ({totalScore})</div>
         <ul style={this.styleB()}>
           {
             this.props.items
+            .sort((a, b) => b.timestamp - a.timestamp)
             .sort((a, b) => b.score - a.score)
             .map((item, index) => {
               return <Item key={item.id} handleBump={this.handleBump.bind(null, item.id)} item={item}/>
             })
           }
         </ul>
-        <ButtonAddItem _list_={this.props._list_}/>
+        <ButtonAddItem _list_={this.props.list.id}/>
       </div>
     )
   }

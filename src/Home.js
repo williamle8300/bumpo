@@ -17,6 +17,7 @@ class Home extends Component {
       lists: [],
       items: [],
     }
+    this.handleCloseList = this.handleCloseList.bind(this)
   }
 
 
@@ -27,7 +28,7 @@ class Home extends Component {
           {this.state.lists.map((list) => <button key={list.id} onTouchTap={() => this.setState({isViewingList: true, currentListIDInView: list.id})}>{list.name}</button>)}
           <ButtonAddList/>
         </div>
-        {this.state.isViewingList ? <List _list_={this.state.currentListIDInView} items={this.state.items.filter((item) => item._list_ === this.state.currentListIDInView)}/> : null}
+        {this.state.isViewingList ? <List handleCloseList={this.handleCloseList} list={this.state.lists.filter((list) => list.id === this.state.currentListIDInView)[0]} items={this.state.items.filter((item) => item._list_ === this.state.currentListIDInView)}/> : null}
       </div>
     )
   }
@@ -61,6 +62,11 @@ class Home extends Component {
 
       this.setState({items: this.state.items.filter((item) => item.id !== snapshot.val().id)})
     })
+  }
+
+  handleCloseList() {
+
+    this.setState({isViewingList: false})
   }
 }
 
