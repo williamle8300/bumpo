@@ -1,10 +1,9 @@
-// import sampleData from './sampleData.js'
 import List from './List'
+import Login from './Login'
+
 
 import React, {Component} from 'react'
 import Firebase from './Firebase'
-import FirebaseUI from 'firebaseui'
-import 'firebaseui/dist/firebaseui.css'
 
 
 class App extends Component {
@@ -15,13 +14,12 @@ class App extends Component {
     this.state = {
       isLoggedIn: false,
     }
-    this.handleSignIn = this.handleSignIn.bind(this)
   }
 
   render() {
     return (
       <div style={{display: 'flex', flexFlow: 'column', height: '100%'}}>
-        {this.state.isLoggedIn ? <List/> : <div id="yo"/>}
+        {this.state.isLoggedIn ? <List/> : <Login/>}
       </div>
     )
   }
@@ -32,26 +30,6 @@ class App extends Component {
       (user) => user ? this.setState({isLoggedIn: true}) : null,
       console.error
     )
-
-    const ui = new FirebaseUI.auth.AuthUI(Firebase.auth())
-
-    ui.start(
-      '#yo',
-      {
-        signInFlow: 'popup',
-        signInSuccessUrl: '/',
-        signInOptions: [
-          Firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-          Firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        ],
-        tosUrl: '/',
-      }
-    )
-
-  }
-
-  handleSignIn() {
-
   }
 
   styleC() {

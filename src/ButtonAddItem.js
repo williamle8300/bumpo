@@ -1,8 +1,6 @@
 // https://stackoverflow.com/questions/42573017/in-react-es6-why-does-the-input-field-lose-focus-after-typing-a-character
 
 import Firebase from './Firebase'
-
-
 import React, {Component} from 'react'
 
 
