@@ -62,7 +62,7 @@ class ButtonAddItem extends Component {
       timestamp: Firebase.database.ServerValue.TIMESTAMP,
       lastUpdated: Firebase.database.ServerValue.TIMESTAMP,
       text: this.state.text,
-      _list_: 'LIST_A',
+      _list_: this.props._list_,
       isCompleted: false,
       score: 1,
     }, (error) => {

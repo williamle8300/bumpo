@@ -1,5 +1,4 @@
 import List from './List'
-import Item from './Item'
 import ButtonAddList from './ButtonAddList'
 
 
@@ -14,7 +13,8 @@ class Home extends Component {
     super(props)
     this.state = {
       isViewingList: false,
-      lists: [{name: 'errands'}],
+      currentListIDInView: null,
+      lists: [],
       items: [],
     }
   }
@@ -23,16 +23,23 @@ class Home extends Component {
   render () {
     return (
       <div style={{height: '100%'}}>
-        <div style={{height: '100%'}}>
-          {this.state.lists.map((list) => <h1 onTouchTap={() => this.setState({isViewingList: true})}>{list.name}</h1>)}
+        <div style={{display: 'flex', height: '100%'}}>
+          {this.state.lists.map((list) => <button key={list.id} onTouchTap={() => this.setState({isViewingList: true, currentListIDInView: list.id})}>{list.name}</button>)}
           <ButtonAddList/>
         </div>
-        {this.state.isViewingList ? <List items={this.state.items}/> : null}
+        {this.state.isViewingList ? <List _list_={this.state.currentListIDInView} items={this.state.items.filter((item) => item._list_ === this.state.currentListIDInView)}/> : null}
       </div>
     )
   }
 
   componentDidMount() {
+
+    Firebase.database()
+    .ref('/user_lists/' +Firebase.auth().currentUser.uid)
+    .on('child_added', (snapshot) => {
+
+      this.setState({lists: this.state.lists.concat(snapshot.val())})
+    })
 
     Firebase.database()
     .ref('/user_items/' +Firebase.auth().currentUser.uid)

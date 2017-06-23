@@ -34,7 +34,7 @@ class List extends Component {
             })
           }
         </ul>
-        <ButtonAddItem/>
+        <ButtonAddItem _list_={this.props._list_}/>
       </div>
     )
   }
