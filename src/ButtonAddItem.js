@@ -1,5 +1,3 @@
-// https://stackoverflow.com/questions/42573017/in-react-es6-why-does-the-input-field-lose-focus-after-typing-a-character
-
 import Firebase from './Firebase'
 import React, {Component} from 'react'
 
@@ -55,10 +53,10 @@ class ButtonAddItem extends Component {
 
     e.preventDefault()
 
-    const id = Firebase.database().ref('user_items/' +Firebase.auth().currentUser.uid+ '/items').push().key
+    const id = Firebase.database().ref('user_items/' +Firebase.auth().currentUser.uid).push().key
 
 
-    Firebase.database().ref('user_items/' +Firebase.auth().currentUser.uid+ '/items/' +id)
+    Firebase.database().ref('user_items/' +Firebase.auth().currentUser.uid+ '/' +id)
     .set({
       id: id,
       timestamp: Firebase.database.ServerValue.TIMESTAMP,
@@ -66,7 +64,7 @@ class ButtonAddItem extends Component {
       text: this.state.text,
       _list_: 'LIST_A',
       isCompleted: false,
-      score: 0,
+      score: 1,
     }, (error) => {
 
       if (error) alert(error)

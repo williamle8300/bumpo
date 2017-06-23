@@ -17,18 +17,17 @@ class List extends Component {
     this.handleBump = this.handleBump.bind(this)
   }
 
+  render() {
 
-  render () {
-
-    const totalScore = this.state.items.map((item) => item.score).reduce((a, b) => a + b, 0)
+    const totalScore = this.props.items.map((item) => item.score).reduce((a, b) => a + b, 0)
 
 
     return (
-      <div style={{height: '100%'}}>
+      <div style={{zIndex: 1, position: 'fixed', top: 0, width: '100%', height: '100%'}}>
         <div style={this.styleA()}>{totalScore}</div>
         <ul style={this.styleB()}>
           {
-            this.state.items
+            this.props.items
             .sort((a, b) => b.score - a.score)
             .map((item, index) => {
               return <Item key={item.id} handleBump={this.handleBump.bind(null, item.id)} item={item}/>
@@ -40,38 +39,17 @@ class List extends Component {
     )
   }
 
-  componentDidMount() {
-
-    Firebase.database()
-    .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items')
-    .on('child_added', (snapshot) => {
-
-      this.setState({items: this.state.items.concat(snapshot.val())})
-    })
-
-    Firebase.database()
-    .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items')
-    .on('child_changed', (snapshot) => {
-
-      this.setState({items: this.state.items.filter((item) => item.id !== snapshot.val().id).concat(snapshot.val())})
-    })
-
-    Firebase.database()
-    .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items')
-    .on('child_removed', (snapshot) => {
-
-      this.setState({items: this.state.items.filter((item) => item.id !== snapshot.val().id)})
-    })
-  }
-
+  // componentDidMount() {
+  //
+  // }
   handleBump (id) {
 
-    const oldItem = this.state.items.filter((item) => item.id === id)[0]
+    const oldItem = this.props.items.filter((item) => item.id === id)[0]
     const newItem = Object.assign({}, oldItem, {score: oldItem.score + 1, lastUpdated: Firebase.database.ServerValue.TIMESTAMP})
 
 
     Firebase.database()
-    .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items/' +id)
+    .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/' +id)
     .set(newItem)
     .then((error) => error ? alert(error) : null)
   }

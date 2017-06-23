@@ -1,4 +1,4 @@
-import List from './List'
+import Home from './Home'
 import Login from './Login'
 
 
@@ -19,7 +19,7 @@ class App extends Component {
   render() {
     return (
       <div style={{display: 'flex', flexFlow: 'column', height: '100%'}}>
-        {this.state.isLoggedIn ? <List/> : <Login/>}
+        {this.state.isLoggedIn ? <Home/> : <Login/>}
       </div>
     )
   }
@@ -30,6 +30,7 @@ class App extends Component {
       (user) => user ? this.setState({isLoggedIn: true}) : null,
       console.error
     )
+
   }
 
   styleC() {

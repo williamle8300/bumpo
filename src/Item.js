@@ -65,7 +65,7 @@ class TodoItem extends Component {
 
     this.setState({loading: true}, () => {
 
-      Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items/' +this.props.item.id)
+      Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/' +this.props.item.id)
       .set(Object.assign({}, this.props.item, {isCompleted: !this.props.item.isCompleted, lastUpdated: Firebase.database.ServerValue.TIMESTAMP}))
       .then((error) => {
 
@@ -78,7 +78,7 @@ class TodoItem extends Component {
 
     this.setState({loading: true}, () => {
 
-      Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/items/' +this.props.item.id)
+      Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/' +this.props.item.id)
       .remove()
       .then((error) => error ? alert(error) : null)
     })
