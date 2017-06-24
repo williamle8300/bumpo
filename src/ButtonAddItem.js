@@ -8,25 +8,42 @@ class ButtonAddItem extends Component {
 
     super(props)
     this.state = {
+      touchElapsedTime: 0,
       isInputVisible: false,
+      isBulkEditorVisible: false,
       text: '',
     }
     this._inputRef = null
+    this._touchElapsedThreshold = 100
     this._animationTime = 300
-    this.toggleInput = this.toggleInput.bind(this)
+    this._timerIncrementer = null
+    this.showAddTodoInput = this.showAddTodoInput.bind(this)
+    this.toggleBulkEditor = this.toggleBulkEditor.bind(this)
     this.handleInput = this.handleInput.bind(this)
     this.handleAddItem = this.handleAddItem.bind(this)
+    this.handleTouchStart = this.handleTouchStart.bind(this)
+    this.handleTouchEnd = this.handleTouchEnd.bind(this)
   }
 
   render() {
     return (
-      <div onTouchTap={this.toggleInput} style={this.styleB(this.props, this.state)}>
-        {/* "action" makes iOS show the "GO" button on the keyboard*/}
+      // FIXME: "OnClick" is a hack to remove iOS' magnifying glass for long taps
+      <div onTouchStart={this.handleTouchStart} onTouchEnd={this.handleTouchEnd} onClick={() => null} style={this.styleB(this.props, this.state)}>
+        {/* "action" makes iOS display "GO" button on keyboard*/}
         <form action onSubmit={this.handleAddItem} style={this.styleA(this.props, this.state)}>
           <input
             ref={(element) => {this._inputRef = element}}
             value={this.state.text}
             onChange={this.handleInput}
+            onBlur={() => {this.setState({isInputVisible: false}); this._inputRef.blur()}}
+          />
+        </form>
+        <form action onSubmit={this.handleAddItem} style={this.styleD(this.props, this.state)}>
+          <textarea
+            ref={(element) => {this._textareaRef = element}}
+            value={this.state.text}
+            onChange={this.handleInput}
+            onBlur={() => {this.setState({isBulkEditorVisible: false}); this._textareaRef.blur()}}
           />
         </form>
         <div style={this.styleC(this.props, this.state)}>
@@ -36,12 +53,42 @@ class ButtonAddItem extends Component {
     )
   }
 
-  toggleInput () {
+  handleTouchStart() {
 
-    this.setState({isInputVisible: !this.state.isInputVisible}, () => {
+    this._timerIncrementer = setInterval(() => {
 
+      if (this.state.touchElapsedTime > this._touchElapsedThreshold) {
+
+        clearInterval(this._timerIncrementer)
+
+        this.setState({touchElapsedTime: 0}, this.toggleBulkEditor)
+      }
+      else this.setState({touchElapsedTime: this.state.touchElapsedTime + 1})
+    }, 1)
+  }
+
+  handleTouchEnd() {
+
+    if (this.state.touchElapsedTime < this._touchElapsedThreshold) {
+
+      this.showAddTodoInput()
+
+      this.setState({touchElapsedTime: 0}, () => clearInterval(this._timerIncrementer))
+    }
+  }
+
+  showAddTodoInput() {
+
+    this.setState({isInputVisible: true}, () => {
+
+      // FIXME: "setTimeout" hack for iOS
       setTimeout(() => this._inputRef.focus(), this._animationTime)
     })
+  }
+
+  toggleBulkEditor() {
+
+    this.setState({isBulkEditorVisible: !this.state.isBulkEditorVisible})
   }
 
   handleInput (e) {
@@ -104,6 +151,12 @@ class ButtonAddItem extends Component {
   styleC(props, state) {
     return {
       display: state.isInputVisible ? 'none' : 'flex',
+    }
+  }
+
+  styleD(props, state) {
+    return {
+      display: state.isBulkEditorVisible ? 'none' : 'flex',
     }
   }
 }

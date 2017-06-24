@@ -28,11 +28,9 @@ class List extends Component {
         <ul style={this.styleB()}>
           {
             this.props.items
-            .sort((a, b) => b.timestamp - a.timestamp)
+            .sort((a, b) =>  a.timestamp - b.timestamp)
             .sort((a, b) => b.score - a.score)
-            .map((item, index) => {
-              return <Item key={item.id} handleBump={this.handleBump.bind(null, item.id)} item={item}/>
-            })
+            .map((item, index) => <Item key={item.id} handleBump={this.handleBump.bind(null, item.id)} item={item}/>)
           }
         </ul>
         <ButtonAddItem _list_={this.props.list.id}/>

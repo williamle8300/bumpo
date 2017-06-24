@@ -12,7 +12,7 @@ class ButtonAddList extends Component {
       name: '',
     }
     this._inputRef = null
-    this._animationTime = 300
+    this._animationTime = 200
     this.toggleInput = this.toggleInput.bind(this)
     this.handleInput = this.handleInput.bind(this)
     this.handleAddList = this.handleAddList.bind(this)

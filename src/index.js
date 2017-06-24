@@ -19,5 +19,12 @@ ReactDOM.render(
     document.documentElement.setAttribute('style', 'position: fixed; width: 100%; height: 100%;')
     document.body.setAttribute('style', 'position: fixed; width: 100%; height: 100%;')
     document.getElementById('root').setAttribute('style', 'position: fixed; width: 100%; height: 100%;')
+
+    // disable context menu
+    window.oncontextmenu = function(event) {
+      event.preventDefault()
+      event.stopPropagation()
+      return false
+    }
   }
 )
