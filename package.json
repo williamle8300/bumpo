@@ -1,8 +1,10 @@
 {
   "name": "bumpo",
   "version": "0.0.1",
+  "homepage": "https://williamle8300.github.io/bumpo",
   "private": true,
   "devDependencies": {
+    "gh-pages": "^1.0.0",
     "react-scripts": "1.0.7"
   },
   "dependencies": {

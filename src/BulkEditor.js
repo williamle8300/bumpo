@@ -52,7 +52,7 @@ class BulkEditor extends Component {
 
 
     //Reference: https://stackoverflow.com/a/38693865/1775026
-    return prevItemsText.length === currentItemsText.length && prevItemsText.every(function (element, index) {
+    return prevItemsText.length === currentItemsText.length && prevItemsText.every((element, index) => {
 
       if(currentItemsText.indexOf(element) > -1){
         return element = currentItemsText[currentItemsText.indexOf(element)]
@@ -102,7 +102,7 @@ class BulkEditor extends Component {
 
     const removedItemsIds = this.props.items.filter((item) => removedItemsText.indexOf(item.text) > -1 ? true : false).map((item) => item.id)
 
-    removedItemsIds.map(function (removedItemsId) {
+    removedItemsIds.map((removedItemsId) => {
 
       Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/' +removedItemsId)
       .remove()
@@ -112,7 +112,7 @@ class BulkEditor extends Component {
 
   addItems(addedItemsText) {
 
-    addedItemsText.map(function (text) {
+    addedItemsText.map((text) => {
 
       const id = Firebase.database().ref('user_items/' +Firebase.auth().currentUser.uid).push().key
 
