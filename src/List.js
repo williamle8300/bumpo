@@ -12,7 +12,6 @@ class List extends Component {
 
     super(props)
     this.state = {
-      items: [],
       isBulkEditorVisible: false,
     }
     this.handleBump = this.handleBump.bind(this)
@@ -40,6 +39,8 @@ class List extends Component {
           toggleBulkEditor={this.toggleBulkEditor}
         />
         <BulkEditor
+          _list_={this.props.list.id}
+          items={this.props.items}
           isVisible={this.state.isBulkEditorVisible}
           toggleBulkEditor={this.toggleBulkEditor}
         />
