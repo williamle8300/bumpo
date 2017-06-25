@@ -17,7 +17,6 @@ class ButtonAddItem extends Component {
     this._animationTime = 300
     this._timerIncrementer = null
     this.showAddTodoInput = this.showAddTodoInput.bind(this)
-    this.triggerBulkEditor = this.triggerBulkEditor.bind(this)
     this.handleInput = this.handleInput.bind(this)
     this.handleAddItem = this.handleAddItem.bind(this)
     this.handleTouchStart = this.handleTouchStart.bind(this)
@@ -34,8 +33,8 @@ class ButtonAddItem extends Component {
             ref={(element) => {this._inputRef = element}}
             value={this.state.text}
             onChange={this.handleInput}
-            onBlur={() => {this.setState({isInputVisible: false}); this._inputRef.blur()}}
           />
+          <button onTouchTap={() => this.setState({isInputVisible: false})}>CLOSE</button>
         </form>
         <div style={this.styleC(this.props, this.state)}>
           ADD TODO
@@ -48,7 +47,11 @@ class ButtonAddItem extends Component {
 
     this._timerIncrementer = setInterval(() => {
 
-      if (this.state.touchElapsedTime > this._touchElapsedThreshold) this.triggerBulkEditor()
+      if (this.state.touchElapsedTime > this._touchElapsedThreshold) {
+
+        clearInterval(this._timerIncrementer)
+        this.props.toggleBulkEditor()
+      }
       else this.setState({touchElapsedTime: this.state.touchElapsedTime + 1})
     }, 1)
   }
@@ -63,18 +66,12 @@ class ButtonAddItem extends Component {
     this.setState({touchElapsedTime: 0}, () => clearInterval(this._timerIncrementer))
   }
 
-  triggerBulkEditor() {
-
-    clearInterval(this._timerIncrementer)
-    this.props.toggleBulkEditor()
-  }
-
   showAddTodoInput() {
 
     this.setState({isInputVisible: true}, () => {
 
       // FIXME: "setTimeout" hack for iOS
-      setTimeout(() => this._inputRef.focus(), this._animationTime)
+      this._inputRef.focus()
     })
   }
 
@@ -120,17 +117,18 @@ class ButtonAddItem extends Component {
     return {
       zIndex: 1,
       position: 'fixed',
-      bottom: state.isInputVisible ? '50%' : 0,
-      left: state.isInputVisible ? '50%' : 0,
+      // bottom: state.isInputVisible ? '50%' : 0,
+      bottom: 0,
+      // left: state.isInputVisible ? '50%' : 0,
       display: 'flex',
       justifyContent: 'center',
       paddingTop: '1rem',
       paddingBottom: '1rem',
-      width: state.isInputVisible ? '90%' : '100%',
+      width: '100%',
       fontFamily: 'helvetica',
-      backgroundColor: '#769276',
+      backgroundColor: 'green',
       color: 'white',
-      transform: state.isInputVisible ? 'translate(-50%, 50%)' : 'none',
+      // transform: state.isInputVisible ? 'translate(-50%, 50%)' : 'none',
       transition: `all ${this._animationTime}ms ease-out`,
     }
   }

@@ -89,7 +89,7 @@ class ButtonAddList extends Component {
       paddingBottom: '1rem',
       width: state.isInputVisible ? '90%' : '100%',
       fontFamily: 'helvetica',
-      backgroundColor: '#769276',
+      backgroundColor: 'green',
       color: 'white',
       transform: state.isInputVisible ? 'translate(-50%, 50%)' : 'none',
       transition: `all ${this._animationTime}ms ease-out`,
