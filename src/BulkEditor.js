@@ -51,7 +51,7 @@ class BulkEditor extends Component {
     const currentItemsText = currentItems.map((item) => item.text)
 
     //Reference: https://stackoverflow.com/a/38693865/1775026
-    return prevItemsText.length == currentItemsText.length && prevItemsText.every((element, index) => {
+    return prevItemsText.length === currentItemsText.length && prevItemsText.every((element, index) => {
 
       if(currentItemsText.indexOf(element)>-1){
         return element = currentItemsText[currentItemsText.indexOf(element)]
@@ -67,7 +67,7 @@ class BulkEditor extends Component {
   handleSubmit() {
 
     const oldItemsText = this.props.items.map((item) => item.text)
-    const newItemsText = this.splitIntoArray(this.state.text)
+    const newItemsText = this.splitTextIntoArray(this.state.text)
     const removedItemsText = this.calcArrayDifference(oldItemsText, newItemsText)
     const addedItemsText = this.calcArrayDifference(newItemsText, oldItemsText)
 
@@ -80,8 +80,8 @@ class BulkEditor extends Component {
     return items.map((item) => item.text).join('\r\n')
   }
 
-  splitIntoArray(rawString) {
-    return rawString.replace(/\n*$/, '').split('\n').filter((itemText) => itemText.length)
+  splitTextIntoArray(rawString) {
+    return rawString.replace(/\n*$/, '').split('\n').filter((text) => text.length)
   }
 
   calcArrayDifference(a, b) {

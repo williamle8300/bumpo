@@ -27,6 +27,7 @@ class ButtonAddList extends Component {
             ref={(element) => {this._inputRef = element}}
             value={this.state.name}
             onChange={this.handleInput}
+            onBlur={() => document.activeElement.blur()}
           />
         </form>
         <div style={this.styleC(this.props, this.state)}>
