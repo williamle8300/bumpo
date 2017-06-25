@@ -21,10 +21,10 @@ ReactDOM.render(
     document.getElementById('root').setAttribute('style', 'position: fixed; width: 100%; height: 100%;')
 
     // disable context menu
-    window.oncontextmenu = function(event) {
-      event.preventDefault()
-      event.stopPropagation()
-      return false
-    }
+    // window.oncontextmenu = function(event) {
+    //   event.preventDefault()
+    //   event.stopPropagation()
+    //   return false
+    // }
   }
 )

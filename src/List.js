@@ -1,6 +1,6 @@
 import Item from './Item'
 import ButtonAddItem from './ButtonAddItem'
-
+import BulkEditor from './BulkEditor'
 
 import React, {Component} from 'react'
 import Firebase from './Firebase'
@@ -13,8 +13,10 @@ class List extends Component {
     super(props)
     this.state = {
       items: [],
+      isBulkEditorVisible: false,
     }
     this.handleBump = this.handleBump.bind(this)
+    this.toggleBulkEditor = this.toggleBulkEditor.bind(this)
   }
 
   render() {
@@ -33,14 +35,23 @@ class List extends Component {
             .map((item, index) => <Item key={item.id} handleBump={this.handleBump.bind(null, item.id)} item={item}/>)
           }
         </ul>
-        <ButtonAddItem _list_={this.props.list.id}/>
+        <ButtonAddItem
+          _list_={this.props.list.id}
+          toggleBulkEditor={this.toggleBulkEditor}
+        />
+        <BulkEditor
+          isVisible={this.state.isBulkEditorVisible}
+          toggleBulkEditor={this.toggleBulkEditor}
+        />
       </div>
     )
   }
 
-  // componentDidMount() {
-  //
-  // }
+  toggleBulkEditor() {
+
+    this.setState({isBulkEditorVisible: !this.state.isBulkEditorVisible})
+  }
+
   handleBump (id) {
 
     const oldItem = this.props.items.filter((item) => item.id === id)[0]

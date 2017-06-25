@@ -10,7 +10,6 @@ class ButtonAddItem extends Component {
     this.state = {
       touchElapsedTime: 0,
       isInputVisible: false,
-      isBulkEditorVisible: false,
       text: '',
     }
     this._inputRef = null
@@ -18,7 +17,7 @@ class ButtonAddItem extends Component {
     this._animationTime = 300
     this._timerIncrementer = null
     this.showAddTodoInput = this.showAddTodoInput.bind(this)
-    this.toggleBulkEditor = this.toggleBulkEditor.bind(this)
+    this.triggerBulkEditor = this.triggerBulkEditor.bind(this)
     this.handleInput = this.handleInput.bind(this)
     this.handleAddItem = this.handleAddItem.bind(this)
     this.handleTouchStart = this.handleTouchStart.bind(this)
@@ -38,14 +37,6 @@ class ButtonAddItem extends Component {
             onBlur={() => {this.setState({isInputVisible: false}); this._inputRef.blur()}}
           />
         </form>
-        <form action onSubmit={this.handleAddItem} style={this.styleD(this.props, this.state)}>
-          <textarea
-            ref={(element) => {this._textareaRef = element}}
-            value={this.state.text}
-            onChange={this.handleInput}
-            onBlur={() => {this.setState({isBulkEditorVisible: false}); this._textareaRef.blur()}}
-          />
-        </form>
         <div style={this.styleC(this.props, this.state)}>
           ADD TODO
         </div>
@@ -57,12 +48,7 @@ class ButtonAddItem extends Component {
 
     this._timerIncrementer = setInterval(() => {
 
-      if (this.state.touchElapsedTime > this._touchElapsedThreshold) {
-
-        clearInterval(this._timerIncrementer)
-
-        this.setState({touchElapsedTime: 0}, this.toggleBulkEditor)
-      }
+      if (this.state.touchElapsedTime > this._touchElapsedThreshold) this.triggerBulkEditor()
       else this.setState({touchElapsedTime: this.state.touchElapsedTime + 1})
     }, 1)
   }
@@ -72,9 +58,15 @@ class ButtonAddItem extends Component {
     if (this.state.touchElapsedTime < this._touchElapsedThreshold) {
 
       this.showAddTodoInput()
-
-      this.setState({touchElapsedTime: 0}, () => clearInterval(this._timerIncrementer))
     }
+
+    this.setState({touchElapsedTime: 0}, () => clearInterval(this._timerIncrementer))
+  }
+
+  triggerBulkEditor() {
+
+    clearInterval(this._timerIncrementer)
+    this.props.toggleBulkEditor()
   }
 
   showAddTodoInput() {
@@ -84,11 +76,6 @@ class ButtonAddItem extends Component {
       // FIXME: "setTimeout" hack for iOS
       setTimeout(() => this._inputRef.focus(), this._animationTime)
     })
-  }
-
-  toggleBulkEditor() {
-
-    this.setState({isBulkEditorVisible: !this.state.isBulkEditorVisible})
   }
 
   handleInput (e) {
@@ -151,12 +138,6 @@ class ButtonAddItem extends Component {
   styleC(props, state) {
     return {
       display: state.isInputVisible ? 'none' : 'flex',
-    }
-  }
-
-  styleD(props, state) {
-    return {
-      display: state.isBulkEditorVisible ? 'none' : 'flex',
     }
   }
 }
