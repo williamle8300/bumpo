@@ -50,10 +50,11 @@ class BulkEditor extends Component {
     const prevItemsText = prevItems.map((item) => item.text)
     const currentItemsText = currentItems.map((item) => item.text)
 
-    //Reference: https://stackoverflow.com/a/38693865/1775026
-    return prevItemsText.length === currentItemsText.length && prevItemsText.every((element, index) => {
 
-      if(currentItemsText.indexOf(element)>-1){
+    //Reference: https://stackoverflow.com/a/38693865/1775026
+    return prevItemsText.length === currentItemsText.length && prevItemsText.every(function (element, index) {
+
+      if(currentItemsText.indexOf(element) > -1){
         return element = currentItemsText[currentItemsText.indexOf(element)]
       }
     })
@@ -99,9 +100,9 @@ class BulkEditor extends Component {
 
   removeItems(removedItemsText) {
 
-    const removedItemsIds = this.props.items.filter((item) => removedItemsText.indexOf(item.text) >= 0 ? true : false).map((item) => item.id)
+    const removedItemsIds = this.props.items.filter((item) => removedItemsText.indexOf(item.text) > -1 ? true : false).map((item) => item.id)
 
-    removedItemsIds.map((removedItemsId) => {
+    removedItemsIds.map(function (removedItemsId) {
 
       Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/' +removedItemsId)
       .remove()
@@ -111,7 +112,7 @@ class BulkEditor extends Component {
 
   addItems(addedItemsText) {
 
-    addedItemsText.map((text) => {
+    addedItemsText.map(function (text) {
 
       const id = Firebase.database().ref('user_items/' +Firebase.auth().currentUser.uid).push().key
 
