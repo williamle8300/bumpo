@@ -24,11 +24,33 @@ class Home extends Component {
   render () {
     return (
       <div style={{height: '100%'}}>
-        <div style={{display: 'flex', height: '100%'}}>
-          {this.state.lists.map((list) => <button key={list.id} onTouchTap={() => this.setState({isViewingList: true, currentListIDInView: list.id})}>{list.name}</button>)}
+
+
+        {/*ALL LISTS*/}
+        <div style={{display: 'flex', flexWrap: 'wrap', padding: '1rem', height: '100%'}}>
+          {this.state.lists.map((list) => {
+            return (
+              <div
+                key={list.id}
+                onTouchTap={() => this.setState({isViewingList: true, currentListIDInView: list.id})}
+                style={this.styleA()}
+              >
+                {list.name}
+              </div>
+            )
+          })}
           <ButtonAddList/>
         </div>
-        {this.state.isViewingList ? <List handleCloseList={this.handleCloseList} list={this.state.lists.filter((list) => list.id === this.state.currentListIDInView)[0]} items={this.state.items.filter((item) => item._list_ === this.state.currentListIDInView)}/> : null}
+
+
+        {/*SINGLE LIST*/}
+        {
+          this.state.isViewingList
+            ? <List handleCloseList={this.handleCloseList} list={this.state.lists.filter((list) => list.id === this.state.currentListIDInView)[0]} items={this.state.items.filter((item) => item._list_ === this.state.currentListIDInView)}/>
+            : null
+        }
+
+
       </div>
     )
   }
@@ -67,6 +89,22 @@ class Home extends Component {
   handleCloseList() {
 
     this.setState({isViewingList: false})
+  }
+
+  styleA() {
+    return {
+      'justify-content': 'center',
+      'align-items': 'center',
+      display: 'flex',
+      margin: '1%',
+      width: '48%',
+      height: '33vh',
+      color: 'white',
+      fontFamily: 'helvetica',
+      fontWeight: 'bold',
+      'background-color': '#cccccc',
+      'border-radius': 5,
+    }
   }
 }
 

@@ -1,4 +1,9 @@
 
+TODO for bulk editor
+"risotto"
+then, bulk edit by adding " rice"
+two instances: 1) "risotto" and "risotto rice" appear
+
 the
 fiiiiiiiiinest
 darkest
@@ -9,7 +14,7 @@ YOU WILL EVER HAVE
 
 sell that coffee
 
-THE TODO LIST THAT HELPS YOU GET THINGS DONE
+WHEN YOU WANNA GET THINGS DONE™
 gamification
 
 sell that
