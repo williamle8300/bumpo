@@ -1,8 +1,14 @@
 
-TODO for bulk editor
-"risotto"
-then, bulk edit by adding " rice"
-two instances: 1) "risotto" and "risotto rice" appear
+BUGS
+1. "risotto"
+  then, bulk edit by adding " rice"
+  two instances: 1) "risotto" and "risotto rice" appear
+
+2. trigger bulkeditor, press update without editing anything, the list now has a duplicate of everything
+
+3. https://github.com/dogfessional/react-swipeable/issues/74
+
+4. adding empty todo causes "maximum call stack size exceeded" error
 
 the
 fiiiiiiiiinest

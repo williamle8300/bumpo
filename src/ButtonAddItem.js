@@ -15,7 +15,6 @@ class ButtonAddItem extends Component {
     this._inputRef = null
     this._touchElapsedThreshold = 100
     this._animationTime = 300
-    this._timerIncrementer = null
     this.showAddTodoInput = this.showAddTodoInput.bind(this)
     this.handleInput = this.handleInput.bind(this)
     this.handleAddItem = this.handleAddItem.bind(this)
