@@ -72,7 +72,7 @@ class BulkEditor extends Component {
     const removedItemsText = this.calcArrayDifference(oldItemsText, newItemsText)
     const addedItemsText = this.calcArrayDifference(newItemsText, oldItemsText)
 
-    // FIXME: side-effects!
+    // FIXME: impure function: side-effects!
     this.removeItems(removedItemsText)
     this.addItems(addedItemsText)
     this.props.toggleBulkEditor()

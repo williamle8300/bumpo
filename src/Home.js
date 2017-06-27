@@ -13,7 +13,9 @@ class Home extends Component {
     super(props)
     this.state = {
       isViewingList: false,
+      isEditingList: false,
       currentListIDInView: null,
+      currentListIDInEdit: null,
       touchElapsedTime: 0,
       lists: [],
       items: [],
@@ -38,7 +40,7 @@ class Home extends Component {
                 key={list.id}
                 onTouchStart={this.handleTouchStart.bind(null, list.id)}
                 onTouchEnd={this.handleTouchEnd.bind(null, list.id)}
-                style={this.styleA()}
+                style={this.styleA(this.props, this.state, list.id)}
               >
                 {list.name}
               </div>
@@ -98,25 +100,31 @@ class Home extends Component {
     })
   }
 
+  // FIXME: impure function: side-effects
   handleTouchStart(_list_) {
 
     this._timerIncrementer = setInterval(() => {
-      console.log(1, this.state.touchElapsedTime)
+
       if (this.state.touchElapsedTime > this._touchElapsedThreshold) {
 
-        this.setState({touchElapsedTime: 0}, () => clearInterval(this._timerIncrementer))
-        this.deleteList(_list_)
+        clearInterval(this._timerIncrementer)
+        this.setState({isEditingList: !this.state.isEditingList, currentListIDInEdit: _list_})
       }
       else this.setState({touchElapsedTime: this.state.touchElapsedTime + 1})
     }, 1)
   }
 
-  // TODO: side-effects
+  // FIXME: impure function: side-effects
   handleTouchEnd(_list_) {
-    console.log(2, this.state.touchElapsedTime)
+
     if (this.state.touchElapsedTime < this._touchElapsedThreshold) {
 
-      this.setState({isViewingList: true, currentListIDInView: _list_})
+      this.setState({
+        isViewingList: true,
+        currentListIDInView: _list_,
+        isEditingList: false,
+        currentListIDInEdit: null,
+      })
     }
 
     this.setState({touchElapsedTime: 0}, () => clearInterval(this._timerIncrementer))
@@ -131,15 +139,18 @@ class Home extends Component {
 
   handleCloseList() {
 
-    this.setState({isViewingList: false})
+    this.setState({isViewingList: false, currentListIDInView: null})
   }
 
-  styleA() {
+  styleA(props, state, _list_) {
     return {
+      position: state.currentListIDInEdit === _list_ ? 'fixed' : 'static',
+      top: state.currentListIDInEdit === _list_ ? '50%' : 'inherit',
+      left: state.currentListIDInEdit === _list_ ? '50%' : 'inherit',
+      display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      display: 'flex',
-      // TODO: hmm. can't get some nice equidistant tiles goin'...
+      // FIXME: hmm. can't get some nice equidistant tiles goin'...
       margin: '1vw',
       width: '48vw',
       height: '48vw',
@@ -148,6 +159,7 @@ class Home extends Component {
       fontWeight: 'bold',
       backgroundColor: '#cccccc',
       borderRadius: 5,
+      transform: state.currentListIDInEdit === _list_ ? 'translate(-50%, -50%)' : 'none',
     }
   }
 }

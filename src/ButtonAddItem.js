@@ -42,19 +42,24 @@ class ButtonAddItem extends Component {
     )
   }
 
+  // FIXME: impure function: side-effects
   handleTouchStart() {
 
     this._timerIncrementer = setInterval(() => {
 
       if (this.state.touchElapsedTime > this._touchElapsedThreshold) {
 
-        clearInterval(this._timerIncrementer)
-        this.props.toggleBulkEditor()
+        this.setState({touchElapsedTime: 0}, () => {
+
+          clearInterval(this._timerIncrementer)
+          this.props.toggleBulkEditor()
+        })
       }
       else this.setState({touchElapsedTime: this.state.touchElapsedTime + 1})
     }, 1)
   }
 
+  // FIXME: impure function: side-effects
   handleTouchEnd() {
 
     if (this.state.touchElapsedTime < this._touchElapsedThreshold) {

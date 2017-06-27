@@ -1,5 +1,8 @@
 
 BUGS
+
+0. cleartimeout upon scrolling for lists view to prevent deletion
+
 1. "risotto"
   then, bulk edit by adding " rice"
   two instances: 1) "risotto" and "risotto rice" appear
@@ -9,6 +12,9 @@ BUGS
 3. https://github.com/dogfessional/react-swipeable/issues/74
 
 4. adding empty todo causes "maximum call stack size exceeded" error
+
+5. when deleting list, delete all items of that list also!
+
 
 the
 fiiiiiiiiinest
