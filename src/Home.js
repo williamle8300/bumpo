@@ -2,6 +2,7 @@ import List from './List'
 import ButtonAddList from './ButtonAddList'
 
 
+import ReactDOM from 'react-dom'
 import React, {Component} from 'react'
 import Firebase from './Firebase'
 
@@ -12,6 +13,8 @@ class Home extends Component {
 
     super(props)
     this.state = {
+      // scrollElapsed: 0,
+      blockListInteraction: false,
       isViewingList: false,
       isEditingList: false,
       currentListIDInView: null,
@@ -21,6 +24,7 @@ class Home extends Component {
       items: [],
     }
     this._touchElapsedThreshold = 100
+    this.handleScroll = this.handleScroll.bind(this)
     this.handleTouchStart = this.handleTouchStart.bind(this)
     this.handleTouchEnd = this.handleTouchEnd.bind(this)
     this.handleCloseList = this.handleCloseList.bind(this)
@@ -33,16 +37,35 @@ class Home extends Component {
 
 
         {/*ALL LISTS*/}
-        <div style={{display: 'flex', flexWrap: 'wrap', height: '100%', overflow: 'scroll'}}>
+        <div onScroll={this.handleScroll} style={{display: 'flex', flexWrap: 'wrap', height: '100%', overflow: 'scroll'}}>
           {this.state.lists.map((list) => {
             return (
               <div
                 key={list.id}
-                onTouchStart={this.handleTouchStart.bind(null, list.id)}
-                onTouchEnd={this.handleTouchEnd.bind(null, list.id)}
                 style={this.styleA(this.props, this.state, list.id)}
               >
-                {list.name}
+                {/*modal background*/}
+                <div
+                  onTouchStart={() => this.setState({isEditingList: false, currentListIDInEdit: null})}
+                  style={this.styleB(this.props, this.state, list.id)}
+                />
+                {/*modal*/}
+                <div
+                  style={this.styleC(this.props, this.state, list.id)}
+                >
+                  {/* details */}
+                  <div
+                    onTouchStart={this.handleTouchStart.bind(null, list.id)}
+                    onTouchEnd={this.handleTouchEnd.bind(null, list.id)}
+                    style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}
+                  >
+                    <div>{list.name}</div>
+                  </div>
+                  {/* "delete" button */}
+                  <div onTouchTap={this.deleteList.bind(null, list.id)} style={this.styleD(this.props, this.state, list.id)}>
+                    delete
+                  </div>
+                </div>
               </div>
             )
           })}
@@ -100,12 +123,16 @@ class Home extends Component {
     })
   }
 
-  // FIXME: impure function: side-effects
+  handleScroll(event) {
+
+    this.setState({blockListInteraction: true})
+  }
+
   handleTouchStart(_list_) {
 
     this._timerIncrementer = setInterval(() => {
 
-      if (this.state.touchElapsedTime > this._touchElapsedThreshold) {
+      if (!this.state.blockListInteraction && this.state.touchElapsedTime > this._touchElapsedThreshold) {
 
         clearInterval(this._timerIncrementer)
         this.setState({isEditingList: !this.state.isEditingList, currentListIDInEdit: _list_})
@@ -117,7 +144,7 @@ class Home extends Component {
   // FIXME: impure function: side-effects
   handleTouchEnd(_list_) {
 
-    if (this.state.touchElapsedTime < this._touchElapsedThreshold) {
+    if (!this.state.blockListInteraction && this.state.touchElapsedTime < this._touchElapsedThreshold) {
 
       this.setState({
         isViewingList: true,
@@ -127,7 +154,7 @@ class Home extends Component {
       })
     }
 
-    this.setState({touchElapsedTime: 0}, () => clearInterval(this._timerIncrementer))
+    this.setState({touchElapsedTime: 0, blockListInteraction: false}, () => clearInterval(this._timerIncrementer))
   }
 
   deleteList(_list_) {
@@ -144,12 +171,10 @@ class Home extends Component {
 
   styleA(props, state, _list_) {
     return {
-      position: state.currentListIDInEdit === _list_ ? 'fixed' : 'static',
-      top: state.currentListIDInEdit === _list_ ? '50%' : 'inherit',
-      left: state.currentListIDInEdit === _list_ ? '50%' : 'inherit',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
+      // position: state.currentListIDInEdit === _list_ ? 'fixed' : 'static',
+      // top: state.currentListIDInEdit === _list_ ? '50%' : 'inherit',
+      // left: state.currentListIDInEdit === _list_ ? '50%' : 'inherit',
+      // display: 'flex',
       // FIXME: hmm. can't get some nice equidistant tiles goin'...
       margin: '1vw',
       width: '48vw',
@@ -157,9 +182,45 @@ class Home extends Component {
       color: 'white',
       fontFamily: 'helvetica',
       fontWeight: 'bold',
-      backgroundColor: '#cccccc',
+      backgroundColor: '#555555',
       borderRadius: 5,
+    }
+  }
+
+  styleB(props, state, _list_) {
+    return {
+      position: state.currentListIDInEdit === _list_ ? 'fixed' : 'static',
+      top: state.currentListIDInEdit === _list_ ? 0 : 'inherit',
+      left: state.currentListIDInEdit === _list_ ? 0 : 'inherit',
+      width: state.currentListIDInEdit === _list_ ? '100%' : 0,
+      height: state.currentListIDInEdit === _list_ ? '100%' : 0,
+      backgroundColor: state.currentListIDInEdit === _list_ ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
+    }
+  }
+
+  styleC(props, state, _list_) {
+    return {
+      position: state.currentListIDInEdit === _list_ ? 'fixed' : 'static',
+      top: state.currentListIDInEdit === _list_ ? '50%' : 'inherit',
+      left: state.currentListIDInEdit === _list_ ? '50%' : 'inherit',
+      width: state.currentListIDInEdit === _list_ ? '50vw' : '100%',
+      height: state.currentListIDInEdit === _list_ ? '50vw' : '100%',
+      backgroundColor: '#bbbbbb',
       transform: state.currentListIDInEdit === _list_ ? 'translate(-50%, -50%)' : 'none',
+      borderRadius: 5,
+    }
+  }
+
+  styleD(props, state, _list_) {
+    return {
+      position: 'absolute',
+      bottom: '0',
+      display: state.currentListIDInEdit === _list_ ? 'flex' : 'none',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '1rem 0',
+      width: '100%',
+      backgroundColor: 'red',
     }
   }
 }
