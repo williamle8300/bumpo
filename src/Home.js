@@ -37,38 +37,40 @@ class Home extends Component {
 
 
         {/*ALL LISTS*/}
-        <div onScroll={this.handleScroll} style={{display: 'flex', flexWrap: 'wrap', height: '100%', overflow: 'scroll'}}>
-          {this.state.lists.map((list) => {
-            return (
-              <div
-                key={list.id}
-                style={this.styleA(this.props, this.state, list.id)}
-              >
-                {/*modal background*/}
+        <div style={{height: '100%'}}>
+          <div onScroll={this.handleScroll} style={{display: 'flex', flexWrap: 'wrap', height: '100%', overflow: 'scroll', overflowScrolling: 'touch', WebkitOverflowScrolling: 'touch'}}>
+            {this.state.lists.map((list) => {
+              return (
                 <div
-                  onTouchStart={() => this.setState({isEditingList: false, currentListIDInEdit: null})}
-                  style={this.styleB(this.props, this.state, list.id)}
-                />
-                {/*modal*/}
-                <div
-                  style={this.styleC(this.props, this.state, list.id)}
+                  key={list.id}
+                  style={this.styleA(this.props, this.state, list.id)}
                 >
-                  {/* details */}
+                  {/*modal background*/}
                   <div
-                    onTouchStart={this.handleTouchStart.bind(null, list.id)}
-                    onTouchEnd={this.handleTouchEnd.bind(null, list.id)}
-                    style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}
+                    onTouchStart={() => this.setState({isEditingList: false, currentListIDInEdit: null})}
+                    style={this.styleB(this.props, this.state, list.id)}
+                  />
+                  {/*modal*/}
+                  <div
+                    style={this.styleC(this.props, this.state, list.id)}
                   >
-                    <div>{list.name}</div>
-                  </div>
-                  {/* "delete" button */}
-                  <div onTouchTap={this.deleteList.bind(null, list.id)} style={this.styleD(this.props, this.state, list.id)}>
-                    delete
+                    {/* details */}
+                    <div
+                      onTouchStart={this.handleTouchStart.bind(null, list.id)}
+                      onTouchEnd={this.handleTouchEnd.bind(null, list.id)}
+                      style={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%'}}
+                    >
+                      <div>{list.name}</div>
+                    </div>
+                    {/* "delete" button */}
+                    <div onTouchTap={this.deleteList.bind(null, list.id)} style={this.styleD(this.props, this.state, list.id)}>
+                      delete
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
           <ButtonAddList/>
         </div>
 
