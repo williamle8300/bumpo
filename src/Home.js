@@ -35,9 +35,10 @@ class Home extends Component {
     return (
       <div style={{height: '100%'}}>
 
-
-        {/*ALL LISTS*/}
+        {/*BOX*/}
         <div style={{height: '100%'}}>
+
+          {/*LISTS*/}
           <div onScroll={this.handleScroll} style={{display: 'flex', flexWrap: 'wrap', height: '100%', overflow: 'scroll', overflowScrolling: 'touch', WebkitOverflowScrolling: 'touch'}}>
             {this.state.lists.map((list) => {
               return (
@@ -127,6 +128,7 @@ class Home extends Component {
 
   handleScroll(event) {
 
+    // TODO: throttle
     this.setState({blockListInteraction: true})
   }
 

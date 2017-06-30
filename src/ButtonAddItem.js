@@ -119,11 +119,6 @@ class ButtonAddItem extends Component {
 
   styleB(props, state) {
     return {
-      zIndex: 1,
-      position: 'fixed',
-      // bottom: state.isInputVisible ? '50%' : 0,
-      bottom: 0,
-      // left: state.isInputVisible ? '50%' : 0,
       display: 'flex',
       justifyContent: 'center',
       paddingTop: '1rem',
