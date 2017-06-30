@@ -23,9 +23,6 @@ class List extends Component {
     this._sortItems = function (items) {
       return items.sort((a, b) =>  a.timestamp - b.timestamp).sort((a, b) => b.score - a.score)
     }
-    this.letItLag = this.letItLag.bind(this)
-    this.incrementQueuedBump = this.incrementQueuedBump.bind(this)
-    this.countdownEffectiveBump = this.countdownEffectiveBump.bind(this)
     this.handleBump = this.handleBump.bind(this)
     this.toggleBulkEditor = this.toggleBulkEditor.bind(this)
   }
@@ -41,7 +38,7 @@ class List extends Component {
         <ul style={this.styleB()}>
           {
             this._sortItems(this.props.items)
-            .map((item, index) => <Item key={item.id} handleBump={this.handleBump.bind(null, item.id)} item={item}/>)
+            .map((item, index) => <Item key={item.id} handleBump={this.handleBump.bind(null, item.id)} item={item} isGettingJumped={this.state.itemsToJump.indexOf(item.id) > -1}/>)
           }
         </ul>
         <ButtonAddItem
@@ -65,66 +62,58 @@ class List extends Component {
 
   handleBump (id) {
 
-    // TODO: race conditions here since not
-    //       using callbacks for "setState"
-    this.letItLag()
-      .incrementQueuedBump()
-      .countdownEffectiveBump(id)
-  }
-
-  letItLag() {
-
     clearTimeout(this._triggerEffectiveBump)
 
-    if (!this.state.isBumpEngaged) this.setState({isBumpEngaged: true})
 
-    return this
-  }
+    const queueBumpAndWait = () => {
 
-  incrementQueuedBump() {
+      this.setState({queuedBumps: this.state.queuedBumps + 1}, () => {
 
-    this.setState({queuedBumps: this.state.queuedBumps + 1})
+        const oldItem = this.props.items.filter((item) => item.id === id)[0]
+        const newItem = Object.assign({}, oldItem, {score: oldItem.score + this.state.queuedBumps, lastUpdated: Firebase.database.ServerValue.TIMESTAMP})
 
-    return this
-  }
+        const oldOrderedItems = this._sortItems(this.props.items)
+        const newOrderedItems = this._sortItems(this.props.items.filter((item) => item.id !== id).concat(newItem))
 
-  countdownEffectiveBump(id) {
+        const oldIndex = oldOrderedItems.map((item) => item.id).indexOf(id)
+        const newIndex = newOrderedItems.map((item) => item.id).indexOf(id)
+        const oldSubordinateItems = oldOrderedItems.slice(oldIndex).slice(1).map((item) => item.id)
+        const newSubordinateItems = newOrderedItems.slice(newIndex).slice(1).map((item) => item.id)
+        const differenceOldNewSubordinateItems = newSubordinateItems.filter((_item_) => oldSubordinateItems.indexOf(_item_) === -1)
 
-    this._triggerEffectiveBump = setTimeout(() => {
 
-      const oldItem = this.props.items.filter((item) => item.id === id)[0]
-      const newItem = Object.assign({}, oldItem, {score: oldItem.score + this.state.queuedBumps, lastUpdated: Firebase.database.ServerValue.TIMESTAMP})
+        this.setState({itemsToJump: differenceOldNewSubordinateItems}, () => {
 
-      const oldOrderedItems = this._sortItems(this.props.items)
-      const newOrderedItems = this._sortItems(this.props.items.filter((item) => item.id !== id).concat(newItem))
+          this._triggerEffectiveBump = setTimeout(() => {
 
-      const oldIndex = oldOrderedItems.map((item) => item.id).indexOf(id)
-      const newIndex = newOrderedItems.map((item) => item.id).indexOf(id)
-      const oldSubordinateItems = oldOrderedItems.slice(oldIndex).slice(1).map((item) => item.id)
-      const newSubordinateItems = newOrderedItems.slice(newIndex).slice(1).map((item) => item.id)
-      const differenceOldNewSubordinateItems = newSubordinateItems.filter((_item_) => oldSubordinateItems.indexOf(_item_) === -1)
+            // animate :DDDDDDDD
 
-      console.log(differenceOldNewSubordinateItems)
 
-      // animate :DDDDDDDD
-      // (CB)
-      //    reset (S)
-      //      firebase!
+            // (CB) firebase!
+            // (CB) reset (S)
+            Firebase.database()
+            .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/' +id)
+            .set(newItem)
+            .then((error) => {
 
-      this.setState({
-        isBumpEngaged: false,
-        queuedBumps: 0,
-        itemsToJump: [],
-        isShifting: false,
-        shiftingElapsed: 0,
-      }, () => {
+              if (error) alert(error)
 
-        Firebase.database()
-        .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/' +id)
-        .set(newItem)
-        .then((error) => error ? alert(error) : null)
+              this.setState({
+                isBumpEngaged: false,
+                queuedBumps: 0,
+                itemsToJump: [],
+                isShifting: false,
+                shiftingElapsed: 0,
+              })
+            })
+          }, 800)
+        })
       })
-    }, 800)
+    }
+
+
+    if (!this.state.isBumpEngaged) this.setState({isBumpEngaged: true}, queueBumpAndWait)
+    if (this.state.isBumpEngaged) queueBumpAndWait()
   }
 
   styleA() {

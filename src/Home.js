@@ -2,7 +2,6 @@ import List from './List'
 import ButtonAddList from './ButtonAddList'
 
 
-import ReactDOM from 'react-dom'
 import React, {Component} from 'react'
 import Firebase from './Firebase'
 

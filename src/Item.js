@@ -116,6 +116,9 @@ class TodoItem extends Component {
   }
 
   styleC(props, state) {
+
+    const backgroundColor = this.props.item.isCompleted ? 'blue' : this.props.isGettingJumped ? 'purple' : '#ccc'
+
     return {
       display: 'flex',
       alignItems: 'center',
@@ -125,7 +128,7 @@ class TodoItem extends Component {
       paddingBottom: '1rem',
       paddingLeft: '1rem',
       width: '100%',
-      backgroundColor: this.props.item.isCompleted ? 'blue' : '#ccc',
+      backgroundColor: backgroundColor,
       transform: `translateX(${state.x}px)`,
     }
   }
