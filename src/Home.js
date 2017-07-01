@@ -38,7 +38,7 @@ class Home extends Component {
         <div style={{height: '100%'}}>
 
           {/*LISTS*/}
-          <div onScroll={this.handleScroll} style={{display: 'flex', flexWrap: 'wrap', height: '100%', overflow: 'scroll', overflowScrolling: 'touch', WebkitOverflowScrolling: 'touch'}}>
+          <div onScroll={this.handleScroll} style={{display: 'flex', flexWrap: 'wrap', height: '90%', overflow: 'scroll', overflowScrolling: 'touch', WebkitOverflowScrolling: 'touch'}}>
             {this.state.lists.map((list) => {
               return (
                 <div

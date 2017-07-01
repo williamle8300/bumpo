@@ -14,15 +14,14 @@ class List extends Component {
     this.state = {
       isBulkEditorVisible: false,
       isBumpEngaged: false,
+      currentBumpItem: null,
       queuedBumps: 0,
       itemsToJump: [],
       isShifting: false,
       shiftingElapsed: 0,
     }
     this._triggerEffectiveBump = null
-    this._sortItems = function (items) {
-      return items.sort((a, b) =>  a.timestamp - b.timestamp).sort((a, b) => b.score - a.score)
-    }
+    this._sortItems = (items) => items.sort((a, b) =>  a.timestamp - b.timestamp).sort((a, b) => b.score - a.score)
     this.handleBump = this.handleBump.bind(this)
     this.toggleBulkEditor = this.toggleBulkEditor.bind(this)
   }
@@ -38,7 +37,17 @@ class List extends Component {
         <ul style={this.styleB()}>
           {
             this._sortItems(this.props.items)
-            .map((item, index) => <Item key={item.id} handleBump={this.handleBump.bind(null, item.id)} item={item} isGettingJumped={this.state.itemsToJump.indexOf(item.id) > -1}/>)
+            .map((item, index) => {
+              return (
+                <Item
+                  key={item.id}
+                  handleBump={this.handleBump.bind(null, item.id)}
+                  id={item.id}
+                  item={item}
+                  items={this.props.items}
+                  isGettingJumped={this.state.itemsToJump.indexOf(item.id) > -1}
+                />)
+            })
           }
         </ul>
         <ButtonAddItem
@@ -62,10 +71,10 @@ class List extends Component {
 
   handleBump (id) {
 
-    clearTimeout(this._triggerEffectiveBump)
-
-
     const queueBumpAndWait = () => {
+
+      clearTimeout(this._triggerEffectiveBump)
+
 
       this.setState({queuedBumps: this.state.queuedBumps + 1}, () => {
 
@@ -100,6 +109,7 @@ class List extends Component {
 
               this.setState({
                 isBumpEngaged: false,
+                currentBumpItem: null,
                 queuedBumps: 0,
                 itemsToJump: [],
                 isShifting: false,
@@ -112,17 +122,25 @@ class List extends Component {
     }
 
 
-    if (!this.state.isBumpEngaged) this.setState({isBumpEngaged: true}, queueBumpAndWait)
-    if (this.state.isBumpEngaged) queueBumpAndWait()
+    // first "bump"
+    if (!this.state.isBumpEngaged) this.setState({isBumpEngaged: true, currentBumpItem: id}, queueBumpAndWait)
+    // same item? increment & reset timeout
+    if (this.state.isBumpEngaged && this.state.currentBumpItem === id) queueBumpAndWait()
+    // ignore bumps to other items
+    if (this.state.isBumpEngaged && this.state.currentBumpItem !== id) return
   }
 
   styleA() {
     return {
+      position: 'absolute',
+      top: 0,
       display : 'flex',
       // flex: '0 1 10vh',
       justifyContent : 'center',
       alignItems : 'center',
-      padding: '1rem',
+      // padding: '1rem',
+      width: '100%',
+      height: '10%',
       fontFamily: 'helvetica',
       fontSize: '2rem',
       color: '#ffffff',
@@ -133,6 +151,8 @@ class List extends Component {
   styleB() {
     return {
       // flex: '1 1 auto',
+      position: 'absolute',
+      top: '10%',
       marginTop: 0,
       marginRight: 0,
       marginBottom: 0,
@@ -141,7 +161,8 @@ class List extends Component {
       paddingRight: 0,
       paddingBottom: 0,
       paddingLeft: 0,
-      height: '100%',
+      width: '100%',
+      height: '80%',
       overflowY: 'scroll',
       overflowX: 'hidden',
       listStyle: 'none',

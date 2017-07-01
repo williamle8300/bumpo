@@ -119,11 +119,13 @@ class ButtonAddItem extends Component {
 
   styleB(props, state) {
     return {
+      position: 'absolute',
+      top: '90%',
       display: 'flex',
       justifyContent: 'center',
-      paddingTop: '1rem',
-      paddingBottom: '1rem',
+      alignItems: 'center',
       width: '100%',
+      height: '10%',
       fontFamily: 'helvetica',
       backgroundColor: 'green',
       color: 'white',

@@ -65,7 +65,7 @@ class TodoItem extends Component {
 
     this.setState({loading: true}, () => {
 
-      Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/' +this.props.item.id)
+      Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/' +this.props.id)
       .set(Object.assign({}, this.props.item, {isCompleted: !this.props.item.isCompleted, lastUpdated: Firebase.database.ServerValue.TIMESTAMP}))
       .then((error) => {
 
@@ -78,7 +78,7 @@ class TodoItem extends Component {
 
     this.setState({loading: true}, () => {
 
-      Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/' +this.props.item.id)
+      Firebase.database().ref('/user_items/' +Firebase.auth().currentUser.uid+ '/' +this.props.id)
       .remove()
       .then((error) => error ? alert(error) : null)
     })
@@ -89,6 +89,7 @@ class TodoItem extends Component {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',           //-100 <--> 100
+      height: '18%',
       backgroundColor: `rgba(0, 0, 255, ${Math.abs(state.x) / 100})`,
       fontFamily: 'helvetica',
       fontSize: '1.25rem',
@@ -117,19 +118,19 @@ class TodoItem extends Component {
 
   styleC(props, state) {
 
-    const backgroundColor = this.props.item.isCompleted ? 'blue' : this.props.isGettingJumped ? 'purple' : '#ccc'
+    const backgroundColor = this.props.item.isCompleted ? 'blue' : this.props.isGettingJumped ? '#6dc7c7' : '#ccc'
 
     return {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      paddingTop: '1rem',
       paddingRight: '1rem',
-      paddingBottom: '1rem',
       paddingLeft: '1rem',
       width: '100%',
+      height: '100%',
       backgroundColor: backgroundColor,
       transform: `translateX(${state.x}px)`,
+      // transition: 'all 300ms ease-out',
     }
   }
 }
