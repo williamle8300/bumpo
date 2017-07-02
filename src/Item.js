@@ -84,11 +84,18 @@ class TodoItem extends Component {
     })
   }
 
+  componentWillUnmount() {
+    console.log('unmounting...', this.props.item.text)
+  }
+
   styleA(props, state) {
     return {
+      zIndex: props.isCurrentBumpItem ? 2 : 1,
+      position: 'absolute',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',           //-100 <--> 100
+      width: '100%',
       height: '18%',
       backgroundColor: `rgba(0, 0, 255, ${Math.abs(state.x) / 100})`,
       fontFamily: 'helvetica',
@@ -98,6 +105,8 @@ class TodoItem extends Component {
       // borderBottomColor: '#ffffff',
       // borderBottomStyle: 'solid',
       cursor: 'pointer',
+      transform: `translateY(${props.sortedItems.map((item) => item.id).indexOf(props.id) * 100}%)`,
+      transition: `transform ${props.animationTime}ms ease-out`,
     }
   }
 

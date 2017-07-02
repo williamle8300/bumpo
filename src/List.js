@@ -22,6 +22,7 @@ class List extends Component {
     }
     this._triggerEffectiveBump = null
     this._sortItems = (items) => items.sort((a, b) =>  a.timestamp - b.timestamp).sort((a, b) => b.score - a.score)
+    this.animationTime = 1000
     this.handleBump = this.handleBump.bind(this)
     this.toggleBulkEditor = this.toggleBulkEditor.bind(this)
   }
@@ -44,8 +45,10 @@ class List extends Component {
                   handleBump={this.handleBump.bind(null, item.id)}
                   id={item.id}
                   item={item}
-                  items={this.props.items}
+                  sortedItems={this._sortItems(this.props.items)}
+                  isCurrentBumpItem={this.state.currentBumpItem === item.id ? true : false}
                   isGettingJumped={this.state.itemsToJump.indexOf(item.id) > -1}
+                  animationTime={this.animationTime}
                 />)
             })
           }
@@ -95,11 +98,6 @@ class List extends Component {
 
           this._triggerEffectiveBump = setTimeout(() => {
 
-            // animate :DDDDDDDD
-
-
-            // (CB) firebase!
-            // (CB) reset (S)
             Firebase.database()
             .ref('/user_items/' +Firebase.auth().currentUser.uid+ '/' +id)
             .set(newItem)
@@ -107,14 +105,19 @@ class List extends Component {
 
               if (error) alert(error)
 
-              this.setState({
-                isBumpEngaged: false,
-                currentBumpItem: null,
-                queuedBumps: 0,
-                itemsToJump: [],
-                isShifting: false,
-                shiftingElapsed: 0,
-              })
+              // allow animation to finish
+              // before re-setting state
+              setTimeout(() => {
+
+                this.setState({
+                  isBumpEngaged: false,
+                  currentBumpItem: null,
+                  queuedBumps: 0,
+                  itemsToJump: [],
+                  isShifting: false,
+                  shiftingElapsed: 0,
+                })
+              }, this.animationTime)
             })
           }, 800)
         })

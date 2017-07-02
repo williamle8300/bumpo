@@ -1,7 +1,7 @@
 
 BUGS
 
-0. cleartimeout upon scrolling for lists view to prevent deletion
+0. turn off firebase connnections upon unmounting
 
 1. "risotto"
   then, bulk edit by adding " rice"
